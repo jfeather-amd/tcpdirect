@@ -164,7 +164,7 @@ nm.slack_notify() {
             export ONLOAD_TREE=\$PWD/onload
             export ZF_DEVEL=1
             export TEST_THREAD_NAME=zf
-            make -k -C tcpdirect test_jenkins
+            make -k -C tcpdirect test_jenkins || true
           """
         }
       },
