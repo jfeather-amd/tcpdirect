@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# X-SPDX-Copyright-Text: (c) Copyright 2024 Advanced Micro Devices, Inc.
+
+name: "perform_build"
+
+on:
+  push:
+  pull_request:
+    types: [opened]
+
+jobs:
+  extract_branch_info:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    outputs:
+      onloadPublicTreeish: ${{ steps.onloadPublicTreeish.outputs.tag }}
+      packetDrillBranch: ${{ steps.packetDrillBranch.outputs.branch }}
+    steps:
+      - name: tcpdirect
+        uses: actions/checkout@v4
+        with:
+          path: tcpdirect
+
+      - name: Install yq
+        run: |
+           sudo apt-get update
+           sudo apt-get install -y python3 python3-pip jq
+           pip3 install yq
+
+      - name: Extract public onload tree-ish
+        id: onloadPublicTreeish
+        run: echo "tag=$(yq -r '.products.Onload.public_tree_ish' < $GITHUB_WORKSPACE/tcpdirect/versions.yaml)" >> "$GITHUB_OUTPUT"
+
+      - name: Extract packetDrill branch name
+        id: packetDrillBranch
+        run: echo "branch=$(yq -r '.products.Packetdrill.version' < $GITHUB_WORKSPACE/tcpdirect/versions.yaml)" >> "$GITHUB_OUTPUT"
+
+  perform_build_and_test:
+    needs: extract_branch_info
+    uses: ./.github/workflows/perform_build.yml
+    with:
+      onloadBranch: ${{ needs.extract_branch_info.outputs.onloadPublicTreeish }}
+      onloadRepo: ${{ github.repository_owner }}/onload
+      tcpdirectPrimaryBranch: # Providing explicitly nothing here uses the current branch
+      tcpdirectRepo: ${{ github.repository_owner }}/tcpdirect
+      packetdrillBranch: ${{ needs.extract_branch_info.outputs.packetDrillBranch }}
+      packetdrillRepo: ${{ github.repository_owner }}/packetdrill-tcpdirect
+    secrets: inherit
+
