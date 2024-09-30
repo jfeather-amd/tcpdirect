@@ -103,11 +103,7 @@ build_and_copy_artifacts() {
     cd "${zf_tmpdir}"
     # shellcheck disable=SC2086
     make ${parallel} ${make_args}
-    if [ -n "$onload_tarball" ]; then
-      build_tree=$(ls -d "${build_dir}"/gnu*);
-    else
-      build_tree=$(ls -d "${build_dir}");
-    fi
+    build_tree=$(ls -d "${build_dir}"/gnu*);
     copy_artifacts "${build_tree}" "${artifact_dir}" "${build_type}"
 }
 
