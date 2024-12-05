@@ -36,9 +36,6 @@ on:
         default: "Xilinx-CNS/packetdrill-tcpdirect"
         required: true
         type: string
-    secrets:
-      PAT:
-        required: true
 
 
 jobs:
@@ -52,7 +49,6 @@ jobs:
           repository: ${{ inputs.tcpdirectRepo }}
           path: tcpdirect
           ref: ${{ inputs.tcpdirectBranch }}
-          token: ${{ secrets.PAT }}
 
       - name: onload checkout public tree-ish
         uses: actions/checkout@v4
@@ -60,7 +56,6 @@ jobs:
           repository: ${{ inputs.onloadRepo }}
           path: onload
           ref: ${{ inputs.onloadBranch }}
-          token: ${{ secrets.PAT }}
 
       - name: packetdrill checkout
         uses: actions/checkout@v4
@@ -69,7 +64,6 @@ jobs:
           repository: ${{ inputs.packetDrillRepo }}
           path: packetdrill-tcpdirect
           ref: ${{ inputs.packetDrillBranch }}
-          token: ${{ secrets.PAT }}
 
       - name: Install TCPDirect Deps
         run: |
