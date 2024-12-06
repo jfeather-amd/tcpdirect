@@ -59,7 +59,7 @@ jobs:
 
       - name: cleanup failed primary checkout
         if: ${{ ! cancelled() && steps.primary_tcpdirect_checkout.outcome == 'failure' }}
-        run: rm -rf cd $GITHUB_WORKSPACE/tcpdirect
+        run: rm -rf $GITHUB_WORKSPACE/tcpdirect
 
       - name: tcpdirect secondary checkout
         uses: actions/checkout@v4

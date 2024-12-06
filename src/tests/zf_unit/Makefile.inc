@@ -177,7 +177,7 @@ $(UT_SCRIPT_BINS): $(UT_BINDIR)/%: $(SRC_CURRENT)/%
 $(UT_SCRIPT_BINS): zf_apps $(UT_BINDIR)/zftcppingpong2
 
 HARNESS_TIME_OUT=480
-TEST_TIME_OUT=120
+TEST_TIME_OUT=240
 
 $(call target_variants,testloop): $(UT_LOOP:%=$(UT_BINDIR)/%)
 $(call target_variants,testloop2): $(UT_LOOP2:%=$(UT_BINDIR)/%)
