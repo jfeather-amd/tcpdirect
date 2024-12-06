@@ -16,10 +16,15 @@ on:
         default: "Xilinx-CNS/onload"
         required: true
         type: string
-      tcpdirectBranch:
+      tcpdirectPrimaryBranch:
         description: "Version of tcpdirect to build"
         default: "master"
         required: true
+        type: string
+      tcpdirectSecondaryBranch:
+        description: "Version of tcpdirect to build if the primary version is unavailable"
+        default: "master"
+        required: false
         type: string
       tcpdirectRepo:
         description: "Version of tcpdirect to build"
@@ -43,12 +48,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: tcpdirect
+      - name: tcpdirect primary checkout
+        id: primary_tcpdirect_checkout
         uses: actions/checkout@v4
+        continue-on-error: true
         with:
           repository: ${{ inputs.tcpdirectRepo }}
           path: tcpdirect
-          ref: ${{ inputs.tcpdirectBranch }}
+          ref: ${{ inputs.tcpdirectPrimaryBranch }}
+
+      - name: tcpdirect secondary checkout
+        uses: actions/checkout@v4
+        if: ${{ ! cancelled() && steps.primary_tcpdirect_checkout.outcome == 'failure' }}
+        with:
+          repository: ${{ inputs.tcpdirectRepo }}
+          path: tcpdirect
+          ref: ${{ inputs.tcpdirectSecondaryBranch }}
 
       - name: onload checkout public tree-ish
         uses: actions/checkout@v4

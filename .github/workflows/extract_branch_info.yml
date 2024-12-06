@@ -41,7 +41,7 @@ jobs:
     with:
       onloadBranch: ${{ needs.extract_branch_info.outputs.onloadPublicTreeish }}
       onloadRepo: ${{ github.repository_owner }}/onload
-      tcpdirectBranch: # Providing explicitly nothing here uses the current branch
+      tcpdirectPrimaryBranch: # Providing explicitly nothing here uses the current branch
       tcpdirectRepo: ${{ github.repository_owner }}/tcpdirect
       packetdrillBranch: ${{ needs.extract_branch_info.outputs.packetDrillBranch }}
       packetdrillRepo: ${{ github.repository_owner }}/packetdrill-tcpdirect
