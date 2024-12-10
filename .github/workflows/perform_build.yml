@@ -41,6 +41,11 @@ on:
         default: "Xilinx-CNS/packetdrill-tcpdirect"
         required: true
         type: string
+      testTimeoutMultiplier:
+        description: "Value to multiply with default test timeouts"
+        default: 1
+        required: false
+        type: number
 
 
 jobs:
@@ -100,6 +105,8 @@ jobs:
           ONLOAD_TREE=$GITHUB_WORKSPACE/onload NDEBUG=1 ZF_DEVEL=1 TEST_THREAD_NAME=zf make -j $(nproc) shim
 
       - name: tests
+        env:
+          TIMEOUT_MULTIPLIER: ${{ inputs.testTimeoutMultiplier }}
         run: |
           cd $GITHUB_WORKSPACE/tcpdirect
           ONLOAD_TREE=$GITHUB_WORKSPACE/onload UT_OUTPUT=$GITHUB_STEP_SUMMARY NDEBUG=1 ZF_DEVEL=1 TEST_THREAD_NAME=zf make -j $(nproc) -k test
