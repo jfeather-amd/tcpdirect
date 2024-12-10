@@ -46,6 +46,11 @@ on:
         default: 1
         required: false
         type: number
+      runSlowTests:
+        description: "Whether the unit tests should run tests marked as slow"
+        default: true
+        required: false
+        type: boolean
 
 
 jobs:
@@ -106,6 +111,7 @@ jobs:
 
       - name: tests
         env:
+          ZF_RUN_SLOW_TESTS: ${{ fromJSON(inputs.runSlowTests) && 1 || 0 }}
           TIMEOUT_MULTIPLIER: ${{ inputs.testTimeoutMultiplier }}
         run: |
           cd $GITHUB_WORKSPACE/tcpdirect
